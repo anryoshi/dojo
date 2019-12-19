@@ -1,0 +1,5 @@
+# Build folders
+.build
+
+# LS folders
+.ccls-cache
