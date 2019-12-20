@@ -47,6 +47,5 @@ target_compile_options(
            -pedantic-errors
            -Wconversion>
         $<$<C_COMPILER_ID:MSVC>:
-            /WX
-            /W4>
+            /Wall>
     )

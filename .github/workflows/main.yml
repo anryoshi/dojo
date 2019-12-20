@@ -1,0 +1,40 @@
+name: dojo_ci
+
+on: [push, pull_request]
+
+jobs:
+  build_linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder for C subdojo
+      run: mkdir .build_c
+    - name: Configure C subdojo
+      env:
+        CC: ${{ matrix.compiler }}
+      run: cd .build_c && cmake ../c
+    - name: Build C subdojo
+      run: cmake --build .build_c
+  build_macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder for C subdojo
+      run: mkdir .build_c
+    - name: Configure C subdojo
+      run: cd .build_c && cmake ../c
+    - name: Build C subdojo
+      run: cmake --build .build_c
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create build folder for C subdojo
+      run: mkdir .build_c
+    - name: Configure C subdojo
+      run: cmake -S c -B .build_c
+    - name: Build C subdojo
+      run: cmake --build .build_c

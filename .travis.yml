@@ -1,0 +1,34 @@
+matrix:
+  include:
+    - language: c
+      os: linux
+      dist: bionic
+      env:
+        - CC=gcc
+      before_script:
+        - cd c
+      script:
+        - mkdir .build && cd .build
+        - cmake ..
+        - cmake --build .
+    - language: c
+      os: linux
+      dist: bionic
+      env:
+        - CC=clang
+      before_script:
+        - cd c
+      script:
+        - mkdir .build && cd .build
+        - cmake ..
+        - cmake --build .
+    - language: c
+      os: osx
+      osx_image: xcode11.2
+      before_script:
+        - cd c
+      script:
+        - mkdir .build && cd .build
+        - cmake ..
+        - cmake --build .
+
