@@ -11,6 +11,7 @@ matrix:
         - mkdir .build && cd .build
         - cmake ..
         - cmake --build .
+        - ctest
     - language: c
       os: linux
       dist: bionic
@@ -22,6 +23,7 @@ matrix:
         - mkdir .build && cd .build
         - cmake ..
         - cmake --build .
+        - ctest
     - language: c
       os: osx
       osx_image: xcode11.2
@@ -31,4 +33,5 @@ matrix:
         - mkdir .build && cd .build
         - cmake ..
         - cmake --build .
+        - ctest
 

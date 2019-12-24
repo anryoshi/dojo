@@ -1,5 +1,17 @@
 # Build folders
 .build
+build
 
 # LS folders
+.clangd
 .ccls-cache
+
+# Compilation database
+compile_commands.json
+
+# Vim swap files
+*.swp
+
+# Visual Studio Code folder
+.vscode
+

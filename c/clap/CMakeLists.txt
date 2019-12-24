@@ -1,36 +1,26 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(
-    nanotest
+    clap
     VERSION 1.0
-    DESCRIPTION "test framework so small that named nano"
+    DESCRIPTION "Command Line Argument Parser"
     LANGUAGES C
     )
 
 add_library(
-    nanotest
-    INTERFACE
+    clap
+    STATIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/clap.c
     )
 
 target_include_directories(
-    nanotest
-    INTERFACE
+    clap
+    PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-add_executable(
-    nanotest_example
-        ${CMAKE_CURRENT_SOURCE_DIR}/nanotest_example.c
-    )
-
-target_link_libraries(
-    nanotest_example
-    PRIVATE
-        nanotest
-    )
-
 set_target_properties(
-    nanotest_example
+    clap
     PROPERTIES
         C_STANDARD 90
         C_STANDARD_REQUIRED ON
@@ -38,8 +28,8 @@ set_target_properties(
     )
 
 target_compile_options(
-    nanotest_example
-    PRIVATE
+    clap
+    PUBLIC
         $<$<OR:$<C_COMPILER_ID:Clang>,$<C_COMPILER_ID:AppleClang>,$<C_COMPILER_ID:GNU>>:
            -Wall
            -Wextra
@@ -50,7 +40,27 @@ target_compile_options(
             /Wall>
     )
 
+add_executable(
+    clap_test
+        ${CMAKE_CURRENT_SOURCE_DIR}/clap_test.c
+    )
+
+target_link_libraries(
+    clap_test
+    PRIVATE
+        clap
+        nanotest
+    )
+
+set_target_properties(
+    clap_test
+    PROPERTIES
+        C_STANDARD 90
+        C_STANDARD_REQUIRED ON
+        C_EXTENSIONS OFF
+    )
+
 add_test(
-    NAME nanotest_example
-    COMMAND nanotest_example
+    NAME clap_test
+    COMMAND clap_test
     )

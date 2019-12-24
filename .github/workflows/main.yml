@@ -18,6 +18,8 @@ jobs:
       run: cd .build_c && cmake ../c
     - name: Build C subdojo
       run: cmake --build .build_c
+    - name: Test C subdojo
+      run: cd .build_c && ctest
   build_macos:
     runs-on: macos-latest
     steps:
@@ -28,6 +30,8 @@ jobs:
       run: cd .build_c && cmake ../c
     - name: Build C subdojo
       run: cmake --build .build_c
+    - name: Test C subdojo
+      run: cd .build_c && ctest
   build_windows:
     runs-on: windows-latest
     steps:
@@ -37,4 +41,8 @@ jobs:
     - name: Configure C subdojo
       run: cmake -S c -B .build_c
     - name: Build C subdojo
-      run: cmake --build .build_c
+      run: cmake --build .build_c --config Release
+    - name: Test C subdojo
+      run: |
+        cd .build_c
+        ctest -C Release
