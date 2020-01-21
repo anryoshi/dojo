@@ -39,7 +39,8 @@
  * @value_required: enum specifying if string value required for option
  *                  or it acts only in switch like manner
  * @value_requied.CLAP_NO_VALUE: switch-like option
- * @value_requied.CLAP_VALUE: option requires a string a value
+ * @value_requied.CLAP_VALUE_OPTIONAL: option may have a string a value
+ * @value_requied.CLAP_VALUE_REQUIRED: option required a string a value
  * @description - description of option used in help generation
  */
 struct clap_option {
@@ -47,7 +48,8 @@ struct clap_option {
     const char* word;
     enum {
         CLAP_NO_VALUE = 0,
-        CLAP_VALUE = 1
+        CLAP_VALUE_OPTIONAL = 1,
+        CLAP_VALUE_REQUIRED = 2
     } value_required;
     const char* description;
 };

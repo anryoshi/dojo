@@ -5,11 +5,12 @@
 
 static const struct clap_option options[] = {
     { 'a', NULL, CLAP_NO_VALUE, "a option without arg" },
-    { 'b', NULL, CLAP_VALUE, "b option with arg" },
-    { 'c', NULL, CLAP_VALUE, "c option with arg" },
-    { 0, "dword", CLAP_NO_VALUE, "dword option without arg" },
-    { 0, "eword", CLAP_VALUE, "eword option with arg" },
-    { 'f', "fword", CLAP_VALUE, "fword option with arg" }
+    { 'b', NULL, CLAP_VALUE_REQUIRED, "b option with arg" },
+    { 'c', NULL, CLAP_VALUE_REQUIRED, "c option with arg" },
+    { 'd', NULL, CLAP_VALUE_OPTIONAL, "d option with arg" },
+    { 0, "aword", CLAP_NO_VALUE, "aword option without arg" },
+    { 0, "bword", CLAP_VALUE_REQUIRED, "bword option with arg" },
+    { 'z', "zword", CLAP_VALUE_REQUIRED, "zword option with arg" }
 };
 
 #define NUMBER_OF_OPTIONS (sizeof(options) / sizeof(struct clap_option))
@@ -21,9 +22,10 @@ struct nanotest_error clap_smoke_test() {
         "-a",
         "-bBVAL",
         "-c", "CVAL",
-        "--dword",
-        "--eword=EVAL",
-        "--fword", "FVAL",
+        "-d",
+        "--aword",
+        "--bword=EWORDVAL",
+        "--zword", "FWORDVAL",
         "FREE_ARG"
     };
     int argc = sizeof(argv) / sizeof(const char*);
@@ -247,7 +249,7 @@ struct nanotest_error clap_only_word_argument_test() {
     size_t i;
     const char* argv[] = {
         "program_name",
-        "--dword"
+        "--aword"
     };
     int argc = sizeof(argv) / sizeof(const char*);
     struct clap_value values[NUMBER_OF_OPTIONS];
@@ -268,16 +270,16 @@ struct nanotest_error clap_only_word_argument_test() {
         );
 
     nanotest_assert(
-        values[3].enabled,
+        values[4].enabled,
         "Option was matched"
         );
     nanotest_assert(
-        values[3].string == NULL,
+        values[4].string == NULL,
         "Option has string"
         );
 
    for (i = 0; i < NUMBER_OF_OPTIONS; ++i) {
-       if (i == 3) {
+       if (i == 4) {
            continue;
        }
        nanotest_assert(
@@ -307,9 +309,10 @@ struct nanotest_error clap_help_test() {
          "  -a                        a option without arg\n"
          "  -b <value>                b option with arg\n"
          "  -c <value>                c option with arg\n"
-         "  --dword                   dword option without arg\n"
-         "  --eword <value>           eword option with arg\n"
-         "  -f | --fword <value>      fword option with arg\n";
+         "  -d [value]                d option with arg\n"
+         "  --aword                   aword option without arg\n"
+         "  --bword <value>           bword option with arg\n"
+         "  -z | --zword <value>      zword option with arg\n";
 
     temp = tmpfile();
     clap_print_help(

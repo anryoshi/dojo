@@ -175,6 +175,7 @@ int clap_parse(
         struct clap_value* values,
         int* free_args) {
 
+    int result = 0;
     int i;
 
     if (argc == 0 || argv == NULL
@@ -198,12 +199,34 @@ int clap_parse(
                 = clap_find_option(number_of_options, options, arg);
             if (option_index != -1) {
                 values[option_index].enabled = CLAP_ENABLED;
-                if (options[option_index].value_required) {
+                if (options[option_index].value_required == CLAP_NO_VALUE) {
+                    if ((arg.type & WITH_VALUE) != 0) {
+                        do {
+                            int option_index;
+                            arg.label++;
+                            arg.value++;
+                            option_index = clap_find_option(
+                                    number_of_options, options, arg);
+                            if (option_index != -1) {
+
+                            }
+                        }
+                        while (arg.label != NULL);
+                    }
+                }
+                else{
                     if ((arg.type & WITH_VALUE) != 0) {
                         values[option_index].string = arg.value;
                     }
                     else {
-                        values[option_index].string = argv[++i];
+                        struct clap_arg next_arg = clap_match_arg(argv[i+1]);
+                        if (next_arg.type & FREE) {
+                            values[option_index].string = argv[++i];
+                        }
+                        else if (options[option_index].value_required
+                                == CLAP_VALUE_REQUIRED) {
+                            result = 1;
+                        }
                     }
                 }
             }
@@ -221,7 +244,7 @@ int clap_parse(
         *(free_args++) = i;  
     }
 
-    return 0;
+    return result;
 }
 
 /**
@@ -270,7 +293,10 @@ int clap_print_help(
         if (options[i].word != NULL) {
             column += fprintf(output, "--%s", options[i].word);
         }
-        if (options[i].value_required) {
+        if (options[i].value_required == 1) {
+            column += fprintf(output, " [value]");
+        }
+        else if (options[i].value_required == 2) {
             column += fprintf(output, " <value>");
         }
         /* Should be always print on 28 column */
